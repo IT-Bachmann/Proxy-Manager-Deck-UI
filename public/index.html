@@ -1,98 +1,55 @@
 <!doctype html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0d1715" />
-    <title>Proxy Manager Deck</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/styles.css?v=20260723-3" />
-  </head>
-  <body>
-    <div class="app-shell">
-      <aside class="sidebar">
-        <a class="brand" href="#" aria-label="Proxy Manager Deck Startseite">
-          <span class="logo">P</span><img class="custom-logo" alt="" />
-          <span>Proxy Manager Deck</span>
-        </a>
-        <nav>
-          <a href="#" class="active" id="dashboardLink"><span class="nav-icon">⌂</span>Übersicht</a>
-          <a href="#" id="proxyHostsLink"><span class="nav-icon">⇄</span>Proxy Hosts <b id="hostCountBadge">0</b></a>
-          <a href="#" data-manager="redirects"><span class="nav-icon">↗</span>Weiterleitungen</a>
-          <a href="#" data-manager="streams"><span class="nav-icon">≋</span>Streams</a>
-          <a href="#" id="certificatesLink"><span class="nav-icon">◇</span>Zertifikate</a>
-          <a href="#" data-manager="providers"><span class="nav-icon">⌘</span>DNS-Plugins</a>
-          <a href="#" data-manager="health"><span class="nav-icon">◉</span>Healthchecks</a>
-          <a href="#" id="usersLink"><span class="nav-icon">♙</span>Benutzer</a>
-          <a href="#" data-manager="notifications"><span class="nav-icon">♢</span>Benachrichtigungen</a>
-          <a href="#" data-manager="audit"><span class="nav-icon">▤</span>Aktivitäten</a>
-          <a href="#" data-manager="logs"><span class="nav-icon">≡</span>Systemprotokoll</a>
-          <a href="#" data-manager="traffic"><span class="nav-icon">↗</span>Traffic &amp; Hits</a>
-          <a href="#" data-manager="branding"><span class="nav-icon">⚙</span>Design</a>
-        </nav>
-        <div class="sidebar-bottom">
-          <div class="system-state"><span id="systemStateDot"></span><div><strong id="systemStateTitle">Control wird geprüft</strong><small id="systemStateDetail">Live-Status wird geladen</small></div></div>
-          <div class="account"><div class="avatar" id="accountAvatar">MM</div><div><strong id="accountName">admin</strong><small id="accountRole">Administrator</small></div><button id="logoutButton">Logout</button></div>
-        </div>
-      </aside>
-
-      <main>
-        <header class="topbar">
-          <button class="menu-button" aria-label="Menü öffnen">☰</button>
-          <div class="breadcrumbs"><span>Proxy Hosts</span><i>/</i><strong>Neu</strong></div>
-          <div class="top-actions"><button class="icon-button language-button" id="languageToggle" title="Auf Englisch umstellen">DE</button><button class="button update-button" id="updateButton" title="Auf GitHub-Updates prüfen">Update prüfen</button><button class="icon-button" id="refreshButton" title="Daten aktualisieren" aria-label="Daten aktualisieren">↻</button><button class="icon-button" id="themeToggle" title="Dunkelmodus einschalten" aria-label="Darstellung wechseln">☾</button></div>
-        </header>
-
-        <section class="content">
-          <div class="page-heading">
-            <div><a href="#" class="back">← &nbsp;Alle Proxy Hosts</a><div class="title-line"><h1>Neuer Proxy Host</h1><span class="status-pill">Entwurf</span></div><p>Verteile Anfragen auf mehrere IPv4- und IPv6-Ziele.</p></div>
-            <div class="heading-actions"><button class="button ghost" id="previewButton">Konfiguration</button><button class="button primary" id="saveButton">Änderungen speichern</button></div>
-          </div>
-
-          <div class="notice"><span class="notice-icon">✓</span><div><strong>Dual-Stack ist aktiv</strong><p>Der Host akzeptiert Anfragen über IPv4 und IPv6. Die Upstreams können unabhängig davon gemischt werden.</p></div><button aria-label="Hinweis schließen">×</button></div>
-
-          <div class="layout">
-            <div class="main-column">
-              <section class="card">
-                <div class="card-head"><div><h2>Allgemein</h2><p>Domain und Weiterleitungsoptionen</p></div></div>
-                <div class="form-grid">
-                  <label class="wide"><span>Domainname</span><input id="domain" value="" placeholder="app.example.com" spellcheck="false" /><small>Domain und DNS-Ziel eintragen</small></label>
-                  <label><span>Schema</span><select id="scheme"><option>http</option><option>https</option></select></label>
-                  <label><span>Weiterleitungs-Port</span><input id="port" type="number" value="80" min="1" max="65535" /></label>
-                  <label class="wide"><span>SSL-Zertifikat</span><select id="certificateSelect"><option value="">– Kein Zertifikat gewählt –</option></select><small>Nur erfolgreich ausgestellte Zertifikate sind wählbar.</small></label>
-                </div>
-                <div class="switch-row"><div><strong>WebSocket-Unterstützung</strong><small>Upgrade-Header automatisch weiterleiten</small></div><label class="switch"><input id="websocket" type="checkbox" checked /><span></span></label></div>
-                <div class="switch-row"><div><strong>SSL aktivieren</strong><small>Vorher ein gültiges Zertifikat für diese Domain anfordern</small></div><label class="switch"><input id="sslEnabled" type="checkbox" /><span></span></label></div>
-              </section>
-
-              <section class="card upstream-card">
-                <div class="card-head"><div><h2>Upstream-Ziele</h2><p>Mehrere Adressen für Lastverteilung und Ausfallsicherheit</p></div><button class="button small" id="addTarget">＋ Ziel hinzufügen</button></div>
-                <div class="strategy-bar"><label><span>Strategie</span><select id="strategy"><option value="least_conn">Wenigste Verbindungen</option><option value="round_robin">Round Robin</option><option value="ip_hash">Client-IP beibehalten</option></select></label><div class="strategy-info"><span>i</span> Gesunde Ziele werden automatisch verwendet.</div></div>
-                <div class="target-list" id="targetList"></div>
-              </section>
-
-              <section class="card">
-                <div class="card-head"><div><h2>Healthcheck</h2><p>Erreichbarkeit der Ziele automatisch prüfen</p></div><label class="switch"><input id="healthEnabled" type="checkbox" checked /><span></span></label></div>
-                <div class="form-grid compact"><label><span>Prüfpfad</span><input id="healthPath" value="/" /></label><label><span>Intervall</span><select><option>Alle 30 Sekunden</option><option>Alle 60 Sekunden</option></select></label></div>
-              </section>
-            </div>
-
-            <aside class="summary-column">
-              <section class="card summary-card"><h3>Live-Status</h3><div class="uptime"><div class="ring"><strong>–</strong><small>Uptime</small></div><div><strong>Noch nicht konfiguriert</strong><small>Proxy Host zuerst speichern</small></div></div><div class="metric"><span>Aktive Ziele</span><strong id="activeCount">0 / 0</strong></div><div class="metric"><span>Antwortzeit</span><strong>–</strong></div><div class="metric"><span>SSL-Zertifikat</span><strong>–</strong></div></section>
-              <section class="card dns-card"><h3>DNS-Einträge</h3><p>Diese Werte werden unter Einstellungen festgelegt.</p><div><span class="record">A</span><code id="dnsIpv4">Nicht konfiguriert</code><i id="dnsIpv4State">–</i></div><div><span class="record purple">AAAA</span><code id="dnsIpv6">Nicht konfiguriert</code><i id="dnsIpv6State">–</i></div><button class="text-button" id="dnsHelpButton">DNS-Anleitung anzeigen →</button></section>
-            </aside>
-          </div>
-        </section>
-      </main>
-    </div>
-
-    <dialog id="configDialog"><div class="dialog-head"><div><h2>Nginx-Konfiguration</h2><p>Vorschau für diesen Proxy Host</p></div><button id="closeDialog">×</button></div><pre><code id="configOutput"></code></pre><div class="dialog-actions"><button class="button ghost" id="copyConfig">Kopieren</button><button class="button primary" id="doneDialog">Fertig</button></div></dialog>
-    <dialog id="managerDialog" class="manager-dialog"><div class="dialog-head"><div><h2 id="managerTitle">Verwaltung</h2><p id="managerSubtitle">Proxy-Manager-Deck-Systemobjekte</p></div><button id="closeManager">×</button></div><div id="managerContent" class="manager-content"></div></dialog>
-    <dialog id="hostDialog" class="manager-dialog host-dialog"><div class="dialog-head"><div><h2 id="hostDialogTitle">Proxy Host bearbeiten</h2><p>Domain, Zertifikat und Upstream-Ziele</p></div><button id="closeHostDialog">×</button></div><form id="hostModalForm" class="manager-content"></form></dialog>
-    <div class="login-screen" id="loginScreen"><div class="login-book" aria-hidden="true"><span class="book-back"></span><span class="book-pages"></span><span class="book-cover"><i class="logo">P</i></span></div><form class="login-card" id="loginForm"><div class="login-brand"><span class="logo">P</span><img class="custom-logo" alt="" /><strong>Proxy Manager Deck</strong></div><h1>Willkommen zurück</h1><p>Melde dich an, um dein Gateway zu verwalten.</p><label><span>Benutzername</span><input id="loginUser" autocomplete="username" value="admin" required /></label><label><span>Passwort</span><input id="loginPassword" type="password" autocomplete="current-password" required /></label><div class="login-error" id="loginError"></div><button class="button primary" type="submit">Sicher anmelden</button><small>Der erste Zugang wird über die Docker-Umgebung festgelegt.</small></form></div>
-    <div class="toast" id="toast"><span>✓</span><div><strong>Gespeichert</strong><small>Die Konfiguration wurde erfolgreich geprüft.</small></div></div>
-    <script src="/app.js?v=20260723-2"></script><script src="/admin-pages.js?v=20260723-1"></script><script src="/branding-layout.js?v=20260723-2"></script><script src="/upload-limit.js?v=20260722-1"></script><script src="/language.js?v=20260723-3"></script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#081713">
+  <title>Proxy Manager Deck</title>
+  <link rel="stylesheet" href="/demo2.css?v=20260723-1">
+  <link rel="stylesheet" href="/real-ui.css?v=20260723-1">
+</head>
+<body>
+  <div class="shell" id="appShell">
+    <aside class="sidebar" id="sidebar">
+      <button class="brand" data-page="dashboard">
+        <span class="brand-mark" id="brandMark">PM</span>
+        <img class="brand-image" id="brandImage" alt="Logo" hidden>
+        <span><strong>Proxy Manager Deck</strong><small>CONTROL PLANE</small></span>
+      </button>
+      <nav id="nav">
+        <section><small>START</small><button class="active" data-page="dashboard"><i>⌂</i><span>Übersicht</span></button></section>
+        <section><small>ROUTING</small><button data-page="proxies"><i>⇄</i><span>Proxy Hosts</span><b id="hostBadge">0</b></button><button data-page="redirects"><i>↗</i><span>Weiterleitungen</span></button><button data-page="streams"><i>≋</i><span>Streams</span></button></section>
+        <section><small>SICHERHEIT</small><button data-page="certificates"><i>◇</i><span>Zertifikate</span><b class="warning" id="certBadge">0</b></button><button data-page="dns"><i>⌘</i><span>DNS-Anbieter</span></button><button data-page="users"><i>♙</i><span>Benutzer</span></button></section>
+        <section><small>ÜBERWACHUNG</small><button data-page="health"><i>◉</i><span>Healthchecks</span></button><button data-page="traffic"><i>⌁</i><span>Traffic &amp; Hits</span></button><button data-page="notifications"><i>♢</i><span>Benachrichtigungen</span></button><button data-page="logs"><i>≡</i><span>Protokolle</span></button></section>
+        <section><small>SYSTEM</small><button data-page="design"><i>⚙</i><span>Design</span></button><button data-page="update"><i>↻</i><span>Update</span></button></section>
+      </nav>
+      <div class="side-bottom">
+        <div class="gateway"><i></i><span><strong id="gatewayTitle">Gateway online</strong><small id="gatewayDetail">Status wird geladen</small></span></div>
+        <button class="profile" data-page="users"><span id="avatar">AD</span><span><strong id="accountName">admin</strong><small id="accountRole">Administrator</small></span><i>›</i></button>
+        <button class="logout" id="logoutButton">Logout</button>
+      </div>
+    </aside>
+    <main>
+      <header>
+        <button class="mobile-menu" id="mobileMenu">☰</button>
+        <div class="breadcrumb"><span>Proxy Manager Deck</span><i>/</i><strong id="crumb">Übersicht</strong></div>
+        <div class="header-actions"><button id="languageButton" title="Sprache">DE</button><button id="updateButton" class="update">Aktuell</button><button id="themeButton" title="Darstellung">☾</button></div>
+      </header>
+      <div class="page" id="page"></div>
+    </main>
+  </div>
+  <div class="mobile-actions"><button data-page="dashboard">⌂<span>Übersicht</span></button><button data-page="proxies">⇄<span>Hosts</span></button><button data-page="proxy-new">＋<span>Neu</span></button><button data-page="certificates">◇<span>SSL</span></button><button id="mobileMore">☰<span>Menü</span></button></div>
+  <div class="login-screen" id="loginScreen">
+    <form class="login-panel" id="loginForm">
+      <div class="login-brand"><span class="brand-mark">PM</span><strong>Proxy Manager Deck</strong></div>
+      <h1>Willkommen zurück</h1><p>Melde dich an, um dein Gateway zu verwalten.</p>
+      <label>Benutzername<input id="loginUser" autocomplete="username" value="admin" required></label>
+      <label>Passwort<input id="loginPassword" type="password" autocomplete="current-password" required></label>
+      <div class="form-error" id="loginError"></div>
+      <button class="button primary">Sicher anmelden</button>
+    </form>
+  </div>
+  <div class="toast" id="toast"><i>✓</i><span><strong></strong><small></small></span></div>
+  <script src="/real-ui.js?v=20260723-1"></script>
+</body>
 </html>
