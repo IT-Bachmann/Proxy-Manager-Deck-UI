@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0d1715" />
-    <title>ProxyManagerDeck2 · Proxy Manager</title>
+    <title>Proxy Manager Deck</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
@@ -13,9 +13,9 @@
   <body>
     <div class="app-shell">
       <aside class="sidebar">
-        <a class="brand" href="#" aria-label="ProxyManagerDeck2 Startseite">
+        <a class="brand" href="#" aria-label="Proxy Manager Deck Startseite">
           <span class="logo">P</span><img class="custom-logo" alt="" />
-          <span>ProxyManagerDeck2</span>
+          <span>Proxy Manager Deck</span>
         </a>
         <nav>
           <a href="#" class="active" id="dashboardLink"><span class="nav-icon">⌂</span>Übersicht</a>
@@ -89,10 +89,10 @@
     </div>
 
     <dialog id="configDialog"><div class="dialog-head"><div><h2>Nginx-Konfiguration</h2><p>Vorschau für diesen Proxy Host</p></div><button id="closeDialog">×</button></div><pre><code id="configOutput"></code></pre><div class="dialog-actions"><button class="button ghost" id="copyConfig">Kopieren</button><button class="button primary" id="doneDialog">Fertig</button></div></dialog>
-    <dialog id="managerDialog" class="manager-dialog"><div class="dialog-head"><div><h2 id="managerTitle">Verwaltung</h2><p id="managerSubtitle">ProxyManagerDeck2-Systemobjekte</p></div><button id="closeManager">×</button></div><div id="managerContent" class="manager-content"></div></dialog>
+    <dialog id="managerDialog" class="manager-dialog"><div class="dialog-head"><div><h2 id="managerTitle">Verwaltung</h2><p id="managerSubtitle">Proxy-Manager-Deck-Systemobjekte</p></div><button id="closeManager">×</button></div><div id="managerContent" class="manager-content"></div></dialog>
     <dialog id="hostDialog" class="manager-dialog host-dialog"><div class="dialog-head"><div><h2 id="hostDialogTitle">Proxy Host bearbeiten</h2><p>Domain, Zertifikat und Upstream-Ziele</p></div><button id="closeHostDialog">×</button></div><form id="hostModalForm" class="manager-content"></form></dialog>
-    <div class="login-screen" id="loginScreen"><div class="login-book" aria-hidden="true"><span class="book-back"></span><span class="book-pages"></span><span class="book-cover"><i class="logo">P</i></span></div><form class="login-card" id="loginForm"><div class="login-brand"><span class="logo">P</span><img class="custom-logo" alt="" /><strong>ProxyManagerDeck2</strong></div><h1>Willkommen zurück</h1><p>Melde dich an, um dein Gateway zu verwalten.</p><label><span>Benutzername</span><input id="loginUser" autocomplete="username" value="admin" required /></label><label><span>Passwort</span><input id="loginPassword" type="password" autocomplete="current-password" required /></label><div class="login-error" id="loginError"></div><button class="button primary" type="submit">Sicher anmelden</button><small>Der erste Zugang wird über die Docker-Umgebung festgelegt.</small></form></div>
+    <div class="login-screen" id="loginScreen"><div class="login-book" aria-hidden="true"><span class="book-back"></span><span class="book-pages"></span><span class="book-cover"><i class="logo">P</i></span></div><form class="login-card" id="loginForm"><div class="login-brand"><span class="logo">P</span><img class="custom-logo" alt="" /><strong>Proxy Manager Deck</strong></div><h1>Willkommen zurück</h1><p>Melde dich an, um dein Gateway zu verwalten.</p><label><span>Benutzername</span><input id="loginUser" autocomplete="username" value="admin" required /></label><label><span>Passwort</span><input id="loginPassword" type="password" autocomplete="current-password" required /></label><div class="login-error" id="loginError"></div><button class="button primary" type="submit">Sicher anmelden</button><small>Der erste Zugang wird über die Docker-Umgebung festgelegt.</small></form></div>
     <div class="toast" id="toast"><span>✓</span><div><strong>Gespeichert</strong><small>Die Konfiguration wurde erfolgreich geprüft.</small></div></div>
-    <script src="/app.js?v=20260723-2"></script><script src="/admin-pages.js?v=20260723-1"></script><script src="/branding-layout.js?v=20260723-2"></script><script src="/upload-limit.js?v=20260722-1"></script><script src="/language.js?v=20260722-2"></script>
+    <script src="/app.js?v=20260723-2"></script><script src="/admin-pages.js?v=20260723-1"></script><script src="/branding-layout.js?v=20260723-2"></script><script src="/upload-limit.js?v=20260722-1"></script><script src="/language.js?v=20260722-2"></script><script src="/product-name.js?v=20260723-1"></script>
   </body>
 </html>

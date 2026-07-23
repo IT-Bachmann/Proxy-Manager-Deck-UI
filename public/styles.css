@@ -5,7 +5,10 @@ button,input,select { font:inherit; }
 button,a { -webkit-tap-highlight-color:transparent; }
 .app-shell { min-height:100vh; display:grid; grid-template-columns:246px 1fr; }
 .sidebar { position:fixed; inset:0 auto 0 0; width:246px; padding:27px 16px 18px; background:var(--nav); color:#dce7e2; display:flex; flex-direction:column; z-index:5; }
-.brand { display:flex; align-items:center; gap:11px; padding:0 12px 28px; color:#fff; text-decoration:none; font:800 20px Manrope,sans-serif; letter-spacing:-.7px; }
+.brand { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; padding:0 8px 22px; color:#fff; text-align:center; text-decoration:none; font:800 18px Manrope,sans-serif; line-height:1.1; letter-spacing:-.5px; }
+.brand>.logo { order:1; width:42px; height:42px; display:grid; place-items:center; border-radius:11px; background:linear-gradient(145deg,var(--brand),var(--brand-dark)); color:#fff; font-size:22px; }
+.brand>.custom-logo { order:1; }
+.brand>span:last-child { order:2; display:block; }
 .brand-mark { position:relative; width:27px; height:27px; transform:rotate(-15deg); }
 .brand-mark i { position:absolute; width:10px; height:23px; border-radius:5px; background:var(--brand); }
 .brand-mark i:first-child { left:3px; top:3px; }.brand-mark i:last-child { right:3px; top:-1px; }
@@ -105,7 +108,7 @@ dialog.manager-dialog.update-dialog,dialog.manager-dialog.update-dialog .manager
 @media(prefers-reduced-motion:reduce){.closing .login-book,.opening .login-book{animation-duration:.15s!important}.login-book>span{animation:none!important}}
 
 /* Hochgeladenes Logo ersetzt das Zeichen; der Produktname steht darunter. */
-.brand:has(.custom-logo:not([hidden])){flex-direction:column;align-items:center;gap:5px;padding-top:0;padding-bottom:18px;text-align:center}
+.brand:has(.custom-logo:not([hidden])){flex-direction:column;align-items:center;gap:7px;padding-top:0;padding-bottom:18px;text-align:center}
 .brand .custom-logo:not([hidden]){display:block;width:auto;max-width:184px!important;height:auto;max-height:76px!important;object-fit:contain}
 .brand .custom-logo:not([hidden])~span{display:block!important;font-size:17px!important;line-height:1.1;color:#fff}
 .login-brand:has(.custom-logo:not([hidden])){flex-direction:column;align-items:center;gap:7px;text-align:center}
