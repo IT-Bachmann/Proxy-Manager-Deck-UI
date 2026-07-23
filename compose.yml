@@ -62,6 +62,7 @@ services:
       retries: 3
     environment:
       UPDATE_BRANCH: ${PROXYDECK_UPDATE_BRANCH:-main}
+      UPDATE_REF: ${PROXYDECK_UPDATE_REF:-main}
       UPDATE_CHECK_INTERVAL: ${PROXYDECK_UPDATE_CHECK_INTERVAL:-21600}
       COMPOSE_PROJECT_NAME: proxy-manager-deck2
     volumes:

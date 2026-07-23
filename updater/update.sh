@@ -5,12 +5,22 @@ touch /updates/update.log
 chmod 777 /updates
 chmod 666 /updates/update.log
 git config --global --add safe.directory /workspace
+selected_ref() { printf '%s' "${UPDATE_REF:-${UPDATE_BRANCH:-main}}"; }
+resolve_ref() {
+  ref=$(selected_ref)
+  if git -C /workspace rev-parse --verify "origin/$ref" >/dev/null 2>&1; then printf 'origin/%s' "$ref"
+  elif git -C /workspace rev-parse --verify "refs/tags/$ref" >/dev/null 2>&1; then printf 'refs/tags/%s' "$ref"
+  else printf 'FETCH_HEAD'
+  fi
+}
 check_updates() {
   printf 'checking' > /updates/status
   date +%s > /updates/check_started
-  if timeout 90 git -C /workspace fetch origin "${UPDATE_BRANCH:-main}" >> /updates/update.log 2>&1; then
+  update_ref=$(selected_ref)
+  printf '%s' "$update_ref" > /updates/selected_ref
+  if timeout 90 git -C /workspace fetch origin "$update_ref" >> /updates/update.log 2>&1; then
     local_commit=$(git -C /workspace rev-parse HEAD 2>/dev/null || true)
-    remote_commit=$(git -C /workspace rev-parse "origin/${UPDATE_BRANCH:-main}" 2>/dev/null || true)
+    remote_commit=$(git -C /workspace rev-parse "$(resolve_ref)" 2>/dev/null || true)
     printf '%s' "$local_commit" > /updates/local_commit
     printf '%s' "$remote_commit" > /updates/remote_commit
     date +%s > /updates/last_checked
@@ -38,12 +48,14 @@ while true; do
     printf 'running' > /updates/status
     chmod 666 /updates/status
     date -u +'%Y-%m-%dT%H:%M:%SZ [1/4] GitHub-Änderungen abrufen' >> /updates/update.log
-    if timeout 120 git -C /workspace fetch origin "${UPDATE_BRANCH:-main}" >> /updates/update.log 2>&1; then
+    update_ref=$(selected_ref)
+    printf '%s' "$update_ref" > /updates/selected_ref
+    if timeout 120 git -C /workspace fetch origin "$update_ref" >> /updates/update.log 2>&1; then
       date -u +'%Y-%m-%dT%H:%M:%SZ [2/4] Fast-Forward-Merge prüfen' >> /updates/update.log
     else
       printf 'failed' > /updates/status; date -u +'%Y-%m-%dT%H:%M:%SZ UPDATE fehlgeschlagen: GitHub nicht erreichbar' >> /updates/update.log; continue
     fi
-    if git -C /workspace merge --ff-only "origin/${UPDATE_BRANCH:-main}" >> /updates/update.log 2>&1; then
+    if git -C /workspace merge --ff-only "$(resolve_ref)" >> /updates/update.log 2>&1; then
       date -u +'%Y-%m-%dT%H:%M:%SZ [3/4] Docker-Images bauen' >> /updates/update.log
     else
       printf 'failed' > /updates/status; date -u +'%Y-%m-%dT%H:%M:%SZ UPDATE fehlgeschlagen: lokale Änderungen oder Merge-Konflikt' >> /updates/update.log; continue

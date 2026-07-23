@@ -54,8 +54,8 @@ Ein Proxy Host kann mehrere gemischte Ziele besitzen, beispielsweise eine intern
 ### Schnellinstallation
 
 ```bash
-git clone https://github.com/IT-Bachmann/ProxyManagerDeck2.git
-cd ProxyManagerDeck2
+git clone https://github.com/IT-Bachmann/Proxy-Manager-Deck-UI.git
+cd Proxy-Manager-Deck-UI
 chmod +x install.sh
 sudo ./install.sh
 ```
@@ -123,6 +123,18 @@ Für HTTP-01 müssen A- und/oder AAAA-Record auf das ProxyManagerDeck2-Gateway z
 ### Updates
 
 ProxyManagerDeck2 prüft standardmäßig alle sechs Stunden sowie manuell über die Oberfläche auf neue Commits. Der Updater besitzt einen Heartbeat und beendet festhängende Git-Abfragen per Timeout. Er erstellt sich während eines Updates nicht mehr selbst neu, sondern lädt sein aktualisiertes Skript ohne Unterbrechung.
+
+Die gewünschte Update-Version wird in `.env` gewählt. Zulässig sind Branches
+und Git-Tags:
+
+```env
+PROXYDECK_UPDATE_REF=main
+```
+
+Beispiele sind `stable`, `v1.2.0` oder wieder `main`. Danach den Updater mit
+`docker compose up -d --force-recreate updater` neu erstellen. Ein Wechsel
+auf einen älteren, nicht Fast-Forward-kompatiblen Stand wird aus
+Sicherheitsgründen abgelehnt.
 
 Manuelles Update:
 
@@ -194,8 +206,8 @@ A proxy host may contain multiple mixed targets, such as an internal IPv4 addres
 ### Quick installation
 
 ```bash
-git clone https://github.com/IT-Bachmann/ProxyManagerDeck2.git
-cd ProxyManagerDeck2
+git clone https://github.com/IT-Bachmann/Proxy-Manager-Deck-UI.git
+cd Proxy-Manager-Deck-UI
 chmod +x install.sh
 sudo ./install.sh
 ```
@@ -249,6 +261,16 @@ For HTTP-01, the domain's A and/or AAAA records must point to the ProxyManagerDe
 ### Updates
 
 ProxyManagerDeck2 checks for new commits every six hours by default and can also be checked manually from the interface. The updater uses a heartbeat and timeouts for stalled Git operations. It no longer recreates its own container during an update; it reloads the updated script without interruption.
+
+Select the update branch or Git tag in `.env`:
+
+```env
+PROXYDECK_UPDATE_REF=main
+```
+
+Values such as `stable` or `v1.2.0` are supported. Recreate the updater with
+`docker compose up -d --force-recreate updater` afterwards. Downgrades that
+are not fast-forward compatible are rejected for safety.
 
 Manual update:
 

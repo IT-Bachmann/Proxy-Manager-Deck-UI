@@ -225,6 +225,8 @@ if [ ! -f .env ]; then
     printf 'PROXYDECK_ADMIN_PASSWORD=%s\n' "$admin_password"
     printf 'PROXYDECK_BIND_ADDRESS=0.0.0.0\n'
     printf 'PROXYDECK_BIND_ADDRESS_IPV6=::\n'
+    printf 'PROXYDECK_UPDATE_REF=main\n'
+    printf 'PROXYDECK_UPDATE_CHECK_INTERVAL=21600\n'
     printf 'PROXYDECK_SECRET_KEY=%s\n' "$secret_key"
     printf 'PROXYDECK_SECURE_COOKIE=0\n'
   } > .env
@@ -252,6 +254,12 @@ if ! grep -q '^PROXYDECK_BIND_ADDRESS=' .env; then
 fi
 if ! grep -q '^PROXYDECK_BIND_ADDRESS_IPV6=' .env; then
   printf 'PROXYDECK_BIND_ADDRESS_IPV6=::\n' >> .env
+fi
+if ! grep -q '^PROXYDECK_UPDATE_REF=' .env; then
+  printf 'PROXYDECK_UPDATE_REF=main\n' >> .env
+fi
+if ! grep -q '^PROXYDECK_UPDATE_CHECK_INTERVAL=' .env; then
+  printf 'PROXYDECK_UPDATE_CHECK_INTERVAL=21600\n' >> .env
 fi
 chmod 600 .env
 
