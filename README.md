@@ -88,7 +88,7 @@ python3 -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().
 
 | Dienst | Port | Beschreibung |
 |---|---:|---|
-| Dashboard | `8181` | Verwaltungsoberfläche, standardmäßig nur an `127.0.0.1` gebunden |
+| Dashboard | `8181` | Verwaltungsoberfläche, standardmäßig an `0.0.0.0` und `[::]` für IPv4 und IPv6 gebunden |
 | Demo | `45130` | Öffentliche interaktive Demo |
 | HTTP | `80` | Proxy und ACME HTTP-01 |
 | HTTPS | `443` | TLS-Reverse-Proxy |
@@ -97,16 +97,16 @@ python3 -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().
 Dashboard lokal:
 
 ```text
-http://127.0.0.1:8181
+http://SERVER-IP:8181
 ```
 
 Dashboard auf einem entfernten Server sicher über SSH öffnen:
 
 ```bash
-ssh -L 8181:127.0.0.1:8181 user@server
+http://SERVER-IP:8181
 ```
 
-Danach lokal `http://127.0.0.1:8181` öffnen.
+Die Verwaltung ist direkt über `http://SERVER-IP:8181` beziehungsweise `http://[SERVER-IPV6]:8181` erreichbar. Beschränke TCP-Port 8181 für IPv4 und IPv6 per Firewall auf vertrauenswürdige Netze.
 
 Demo:
 
@@ -228,7 +228,7 @@ python3 -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().
 
 | Service | Port | Description |
 |---|---:|---|
-| Dashboard | `8181` | Management interface, bound to `127.0.0.1` by default |
+| Dashboard | `8181` | Management interface, bound to `0.0.0.0` and `[::]` for IPv4 and IPv6 by default |
 | Demo | `45130` | Public interactive demo |
 | HTTP | `80` | Proxy and ACME HTTP-01 |
 | HTTPS | `443` | TLS reverse proxy |
@@ -237,10 +237,10 @@ python3 -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().
 For a remote server, use an SSH tunnel:
 
 ```bash
-ssh -L 8181:127.0.0.1:8181 user@server
+http://SERVER-IP:8181
 ```
 
-Then open `http://127.0.0.1:8181` locally. The demo is available at `http://SERVER-IP:45130` using `admin` / `proxydeck-demo`.
+Open `http://SERVER-IP:8181` or `http://[SERVER-IPV6]:8181` directly. Restrict TCP port 8181 for IPv4 and IPv6 to trusted networks with a firewall. The demo is available at `http://SERVER-IP:45130`.
 
 ### Certificates
 

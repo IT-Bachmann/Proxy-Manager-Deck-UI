@@ -223,6 +223,8 @@ if [ ! -f .env ]; then
   {
     printf 'PROXYDECK_ADMIN_USER=admin\n'
     printf 'PROXYDECK_ADMIN_PASSWORD=%s\n' "$admin_password"
+    printf 'PROXYDECK_BIND_ADDRESS=0.0.0.0\n'
+    printf 'PROXYDECK_BIND_ADDRESS_IPV6=::\n'
     printf 'PROXYDECK_SECRET_KEY=%s\n' "$secret_key"
     printf 'PROXYDECK_SECURE_COOKIE=0\n'
   } > .env
@@ -235,7 +237,9 @@ if [ ! -f .env ]; then
     fi
     printf 'Benutzer: admin\n'
     printf 'Passwort: %s\n' "$admin_password"
-    printf 'Remote-Zugriff: ssh -L 8181:127.0.0.1:8181 user@server\n'
+    printf 'Bind-Adresse IPv4: 0.0.0.0:8181 (alle IPv4-Schnittstellen)\n'
+    printf 'Bind-Adresse IPv6: [::]:8181 (alle IPv6-Schnittstellen)\n'
+    printf 'Direkter Zugriff: %s\n' "$dashboard_url"
   } > proxydeck-login.txt
   chmod 600 .env proxydeck-login.txt
   credentials_created=1
@@ -243,6 +247,13 @@ else
   credentials_created=0
   warn ".env already exists; existing credentials were preserved."
 fi
+if ! grep -q '^PROXYDECK_BIND_ADDRESS=' .env; then
+  printf 'PROXYDECK_BIND_ADDRESS=0.0.0.0\n' >> .env
+fi
+if ! grep -q '^PROXYDECK_BIND_ADDRESS_IPV6=' .env; then
+  printf 'PROXYDECK_BIND_ADDRESS_IPV6=::\n' >> .env
+fi
+chmod 600 .env
 
 # Refresh addresses in the credentials note on every run without changing the password.
 if [ -f proxydeck-login.txt ]; then
@@ -254,7 +265,10 @@ if [ -f proxydeck-login.txt ]; then
       printf 'ProxyManagerDeck2 Dashboard IPv6: http://[%s]:8181\n' "$primary_ipv6"
       printf 'ProxyManagerDeck2 Demo IPv6: http://[%s]:45130\n' "$primary_ipv6"
     fi
-    awk '!/^ProxyManagerDeck2 Dashboard/ && !/^ProxyManagerDeck2 Demo/ && !/^Remote-Zugriff:/' proxydeck-login.txt
+    printf 'Bind-Adresse IPv4: 0.0.0.0:8181 (alle IPv4-Schnittstellen)\n'
+    printf 'Bind-Adresse IPv6: [::]:8181 (alle IPv6-Schnittstellen)\n'
+    printf 'Direkter Zugriff: %s\n' "$dashboard_url"
+    awk '!/^ProxyManagerDeck2 Dashboard/ && !/^ProxyManagerDeck2 Demo/ && !/^Remote-Zugriff:/ && !/^Bind-Adresse/ && !/^Direkter Zugriff:/' proxydeck-login.txt
   } > "$login_tmp"
   mv "$login_tmp" proxydeck-login.txt
   chmod 600 proxydeck-login.txt
@@ -290,10 +304,12 @@ if [ -n "$primary_ipv6" ]; then
   printf 'Demo IPv6:      http://[%s]:45130\n' "$primary_ipv6"
 fi
 printf 'User:      admin\n'
+printf 'Bind IPv4: 0.0.0.0:8181 (alle IPv4-Schnittstellen)\n'
+printf 'Bind IPv6: [::]:8181 (alle IPv6-Schnittstellen)\n'
 if [ "$credentials_created" -eq 1 ]; then
   printf 'Password:  %s\n' "$admin_password"
   printf '\nSave this password now. It is stored in .env and proxydeck-login.txt and will not be printed again.\n'
 fi
-printf '\nFor remote access, use an SSH tunnel:\n'
-printf '  ssh -L 8181:127.0.0.1:8181 user@server\n'
+printf '\nDirekter Zugriff im Netzwerk: %s\n' "$dashboard_url"
+printf 'Firewall: TCP-Port 8181 nur für vertrauenswürdige Netze freigeben.\n'
 printf '\nNext: read SECURITY.md and change PROXYDECK_SECURE_COOKIE only after enabling HTTPS.\n'

@@ -10,7 +10,8 @@ services:
       PROXYDECK_SECRET_KEY: ${PROXYDECK_SECRET_KEY:?Set PROXYDECK_SECRET_KEY in .env}
       PROXYDECK_SECURE_COOKIE: ${PROXYDECK_SECURE_COOKIE:-0}
     ports:
-      - "8181:3000"
+      - "${PROXYDECK_BIND_ADDRESS:-0.0.0.0}:8181:3000"
+      - "[${PROXYDECK_BIND_ADDRESS_IPV6:-::}]:8181:3000"
     volumes:
       - proxydeck_data:/data
       - generated_config:/generated
