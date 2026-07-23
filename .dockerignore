@@ -1,0 +1,16 @@
+.git
+.github
+.env
+data
+generated
+acme-webroot
+__pycache__
+*.pyc
+*.db
+*.log
+demo
+README.md
+SECURITY.md
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+LICENSE

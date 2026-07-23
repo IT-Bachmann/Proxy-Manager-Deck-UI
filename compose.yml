@@ -1,0 +1,84 @@
+name: proxy-manager-deck2
+
+services:
+  control:
+    build: .
+    restart: unless-stopped
+    environment:
+      PROXYDECK_ADMIN_USER: ${PROXYDECK_ADMIN_USER:-admin}
+      PROXYDECK_ADMIN_PASSWORD: ${PROXYDECK_ADMIN_PASSWORD:?Set PROXYDECK_ADMIN_PASSWORD in .env}
+      PROXYDECK_SECRET_KEY: ${PROXYDECK_SECRET_KEY:?Set PROXYDECK_SECRET_KEY in .env}
+      PROXYDECK_SECURE_COOKIE: ${PROXYDECK_SECURE_COOKIE:-0}
+    ports:
+      - "8181:3000"
+    volumes:
+      - proxydeck_data:/data
+      - generated_config:/generated
+      - letsencrypt:/etc/letsencrypt
+      - acme_webroot:/var/www/acme
+      - traffic_logs:/logs:ro
+      - update_control:/updates
+    networks: [edge]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:3000/', timeout=2)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  gateway:
+    build: ./gateway
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      # Stream-Ports müssen Docker bekannt sein. Weitere Ports hier ergänzen.
+      - "9000:9000/tcp"
+      - "9000:9000/udp"
+    volumes:
+      - generated_config:/etc/nginx/proxydeck:ro
+      - letsencrypt:/etc/letsencrypt:ro
+      - acme_webroot:/var/www/acme:ro
+      - traffic_logs:/logs
+    networks: [edge]
+    depends_on:
+      control: { condition: service_healthy }
+
+  demo:
+    build: ./demo
+    restart: unless-stopped
+    ports:
+      - "45130:80"
+    networks: [edge]
+
+  updater:
+    build: ./updater
+    restart: unless-stopped
+    command: ["/bin/sh", "/workspace/updater/update.sh"]
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /updates/heartbeat && test $$(($$(date +%s) - $$(cat /updates/heartbeat))) -lt 20"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+    environment:
+      UPDATE_BRANCH: ${PROXYDECK_UPDATE_BRANCH:-main}
+      UPDATE_CHECK_INTERVAL: ${PROXYDECK_UPDATE_CHECK_INTERVAL:-21600}
+      COMPOSE_PROJECT_NAME: proxy-manager-deck2
+    volumes:
+      - ./:/workspace
+      - update_control:/updates
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  edge:
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: 172.30.73.0/24
+        - subnet: fd42:7072:6f78:7a::/64
+volumes:
+  proxydeck_data:
+  generated_config:
+  letsencrypt:
+  acme_webroot:
+  traffic_logs:
+  update_control:

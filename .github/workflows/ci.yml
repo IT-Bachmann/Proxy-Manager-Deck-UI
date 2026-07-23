@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Python validation dependency
+        run: pip install cryptography
+      - name: Check Python
+        run: python -m py_compile server.py
+      - name: Check JavaScript
+        run: |
+          node --check public/app.js
+          node --check demo/demo.js
+          node --check demo/providers.js
+          node --check demo/notifications.js
+          node --check demo/theme.js
+      - name: Validate Compose model
+        env:
+          PROXYDECK_ADMIN_PASSWORD: ci-password-not-for-production
+          PROXYDECK_SECRET_KEY: MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA=
+        run: docker compose config --quiet
+      - name: Build containers
+        run: |
+          docker build -t proxydeck-control:ci .
+          docker build -t proxydeck-gateway:ci gateway

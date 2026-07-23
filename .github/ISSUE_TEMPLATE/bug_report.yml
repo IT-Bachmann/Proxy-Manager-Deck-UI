@@ -1,0 +1,33 @@
+name: Bug report
+description: Report a reproducible ProxyDeck problem
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include passwords, API tokens, private keys, certificates or database files.
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [Dashboard, Proxy hosts, Nginx activation, ACME, DNS plugins, Streams, Authentication, Docker, Other]
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and reproduction steps
+    validations:
+      required: true

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Proxy Manager Deck · Demo 2</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar">
+      <button class="brand" data-page="dashboard"><span class="brand-mark">PM</span><span><strong>Proxy Manager Deck</strong><small>CONTROL PLANE</small></span></button>
+      <nav id="nav">
+        <section><small>START</small><button class="active" data-page="dashboard"><i>⌂</i><span>Übersicht</span></button></section>
+        <section><small>ROUTING</small><button data-page="proxies"><i>⇄</i><span>Proxy Hosts</span><b>3</b></button><button data-page="redirects"><i>↗</i><span>Weiterleitungen</span></button><button data-page="streams"><i>≋</i><span>Streams</span></button></section>
+        <section><small>SICHERHEIT</small><button data-page="certificates"><i>◇</i><span>Zertifikate</span><b class="warning">1</b></button><button data-page="dns"><i>⌘</i><span>DNS-Anbieter</span></button><button data-page="users"><i>♙</i><span>Benutzer</span></button></section>
+        <section><small>ÜBERWACHUNG</small><button data-page="health"><i>◉</i><span>Healthchecks</span></button><button data-page="traffic"><i>⌁</i><span>Traffic &amp; Hits</span></button><button data-page="notifications"><i>♢</i><span>Benachrichtigungen</span></button><button data-page="logs"><i>≡</i><span>Protokolle</span></button></section>
+        <section><small>SYSTEM</small><button data-page="design"><i>⚙</i><span>Design</span></button></section>
+      </nav>
+      <div class="side-bottom"><div class="gateway"><i></i><span><strong>Gateway online</strong><small>IPv4 + IPv6 aktiv</small></span></div><button class="profile" data-page="users"><span>MM</span><span><strong>Max Mustermann</strong><small>Administrator</small></span><i>›</i></button></div>
+    </aside>
+    <main>
+      <header><button class="mobile-menu" id="mobileMenu">☰</button><div class="breadcrumb"><span>Proxy Manager Deck</span><i>/</i><strong id="crumb">Übersicht</strong></div><div class="header-actions"><button id="searchButton" title="Suchen">⌕</button><button id="updateButton" class="update">Aktuell</button><button id="themeButton" title="Darstellung">☾</button></div></header>
+      <div class="page" id="page"></div>
+    </main>
+  </div>
+  <div class="mobile-actions"><button data-page="dashboard">⌂<span>Übersicht</span></button><button data-page="proxies">⇄<span>Hosts</span></button><button data-action="create">＋<span>Neu</span></button><button data-page="certificates">◇<span>SSL</span></button><button id="mobileMore">☰<span>Menü</span></button></div>
+  <dialog id="modal"><form method="dialog"><header><div><h2 id="modalTitle">Bearbeiten</h2><p id="modalSubtitle"></p></div><button value="cancel">×</button></header><div class="modal-body" id="modalBody"></div><footer><button value="cancel" class="button">Abbrechen</button><button type="button" class="button primary" id="modalSave">Speichern</button></footer></form></dialog>
+  <div class="toast" id="toast"><i>✓</i><span><strong></strong><small></small></span></div>
+  <script src="app.js"></script>
+  <script src="modal-context.js"></script>
+  <script src="features.js"></script>
+  <script src="scale.js"></script>
+  <script src="product-name.js"></script>
+</body>
+</html>

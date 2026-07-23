@@ -1,0 +1,7 @@
+{
+  "name": "proxydeck",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A small reverse-proxy manager with multi-upstream IPv4/IPv6 support.",
+  "scripts": { "start": "python server.py", "check": "node --check public/app.js" }
+}

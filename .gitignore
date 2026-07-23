@@ -1,0 +1,15 @@
+.env
+data/*
+generated/*
+acme-webroot/*
+__pycache__/
+*.pyc
+!.gitkeep
+.agents/
+.codex/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
+proxydeck-login.txt
