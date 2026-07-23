@@ -12,7 +12,7 @@
     ["Anmelden","Sign in"],["Sicher anmelden","Sign in securely"],["Willkommen zurück","Welcome back"],["Melde dich an, um dein Gateway zu verwalten.","Sign in to manage your gateway."],["Logout","Sign out"],["Gateway online","Gateway online"],["Control online","Control online"],["Daten aktualisieren","Refresh data"],["Dunkelmodus einschalten","Enable dark mode"],["Hellmodus einschalten","Enable light mode"],["Schließen","Close"]
   ]);
   const placeholders = new Map([["Domain suchen …","Search domain …"],["Keine Datei ausgewählt","No file selected"],["app.example.com","app.example.com"],["www.example.com","www.example.com"]]);
-  const originals = new WeakMap(), attributeOriginals = new WeakMap(), observerConfig={subtree:true,childList:true,characterData:true,characterDataOldValue:true}; let applying = false,observer;
+  const originals = new WeakMap(), attributeOriginals = new WeakMap(), observerConfig={subtree:true,childList:true}; let applying = false,observer,scheduled = false;
   const language = () => localStorage.getItem("proxydeck-language") || "de";
   function translated(value) {
     const lead=value.match(/^\s*/)[0],tail=value.match(/\s*$/)[0],core=value.trim(); if(!core)return value;
@@ -22,6 +22,6 @@
     return lead+result+tail;
   }
   function apply(root=document.body){if(applying||!root)return;applying=true;observer?.disconnect();const english=language()==="en",walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){if(node.parentElement?.closest("script,style,code,pre,.system-log"))continue;if(!originals.has(node))originals.set(node,node.nodeValue);node.nodeValue=english?translated(originals.get(node)):originals.get(node)}root.querySelectorAll("[placeholder],[title],[aria-label]").forEach(element=>{let values=attributeOriginals.get(element);if(!values){values={};["placeholder","title","aria-label"].forEach(name=>{if(element.hasAttribute(name))values[name]=element.getAttribute(name)});attributeOriginals.set(element,values)}Object.entries(values).forEach(([name,value])=>element.setAttribute(name,english?(placeholders.get(value)||exact.get(value)||value):value))});const button=document.querySelector("#languageToggle");if(button){button.textContent=english?"EN":"DE";button.title=english?"Switch to German":"Auf Englisch umstellen"}applying=false;observer?.observe(document.body,observerConfig)}
-  observer=new MutationObserver(records=>{if(applying)return;records.forEach(record=>{if(record.type==="characterData")originals.set(record.target,record.target.nodeValue)});queueMicrotask(()=>apply())});observer.observe(document.body,observerConfig);
+  observer=new MutationObserver(()=>{if(applying||scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;apply()})});observer.observe(document.body,observerConfig);
   document.querySelector("#languageToggle")?.addEventListener("click",()=>{localStorage.setItem("proxydeck-language",language()==="de"?"en":"de");apply()});apply();window.applyProxyManagerDeck2Language=apply;
 })();
